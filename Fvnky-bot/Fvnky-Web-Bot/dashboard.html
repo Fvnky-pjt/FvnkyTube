@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Console | FvnkyTube Enterprise</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { background-color: #030712; color: #f3f4f6; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass { background: rgba(17, 24, 39, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .sidebar { background: #0b0f1a; border-right: 1px solid rgba(255,255,255,0.05); }
+        .nav-link.active { background: #1e293b; color: #3b82f6; border-right: 4px solid #3b82f6; }
+        .card-stat { background: linear-gradient(135deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.5) 100%); }
+        .hidden { display: none; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+    </style>
+</head>
+<body class="flex min-h-screen">
+
+    <!-- Sidebar -->
+    <aside class="sidebar w-72 fixed h-full flex flex-col z-50 overflow-y-auto">
+        <div class="p-8 flex items-center gap-3">
+            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/20">
+                <i class="fas fa-terminal text-white"></i>
+            </div>
+            <h1 class="text-xl font-black tracking-tighter uppercase">Fvnky<span class="text-blue-500 italic">Tube</span></h1>
+        </div>
+
+        <nav class="flex-1 px-4 space-y-2">
+            <label class="px-4 text-[10px] font-bold text-gray-600 uppercase tracking-widest">Core Control</label>
+            <button onclick="switchTab('overview')" id="btn-overview" class="nav-link w-full flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-bold text-gray-400 hover:bg-white/5 active">
+                <i class="fas fa-chart-pie w-5"></i> System Overview
+            </button>
+            <button onclick="switchTab('guilds')" id="btn-guilds" class="nav-link w-full flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-bold text-gray-400 hover:bg-white/5">
+                <i class="fas fa-server w-5"></i> My Servers
+            </button>
+            <button onclick="switchTab('music')" id="btn-music" class="nav-link w-full flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-bold text-gray-400 hover:bg-white/5">
+                <i class="fas fa-music w-5"></i> Global Music
+            </button>
+            
+            <label class="px-4 pt-6 block text-[10px] font-bold text-gray-600 uppercase tracking-widest">Security & AI</label>
+            <button onclick="switchTab('moderation')" id="btn-moderation" class="nav-link w-full flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-bold text-gray-400 hover:bg-white/5">
+                <i class="fas fa-shield-halved w-5"></i> Moderation
+            </button>
+            <button onclick="switchTab('ai')" id="btn-ai" class="nav-link w-full flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-bold text-gray-400 hover:bg-white/5">
+                <i class="fas fa-brain w-5"></i> AI Assistant
+            </button>
+        </nav>
+
+        <div id="user-profile" class="p-6 bg-black/20 m-4 rounded-3xl border border-white/5">
+            <!-- Populated via JS -->
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="ml-72 flex-1 p-8">
+        <!-- Tab: Overview -->
+        <section id="tab-overview" class="animate-in fade-in duration-500">
+            <header class="flex justify-between items-end mb-10">
+                <div>
+                    <h2 class="text-4xl font-extrabold tracking-tight">System <span class="text-blue-500">Health</span></h2>
+                    <p class="text-gray-500 font-medium">Real-time telemetry from FvnkyTube Neural Engine.</p>
+                </div>
+                <div class="flex gap-3">
+                    <div class="px-4 py-2 glass rounded-xl text-xs font-bold flex items-center gap-2">
+                        <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        API: v1.0.2-Stable
+                    </div>
+                </div>
+            </header>
+
+            <!-- Grid Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+                <div class="card-stat p-6 rounded-[2rem] border border-white/5">
+                    <p class="text-gray-500 text-xs font-bold uppercase tracking-widest mb-1">Ram Usage</p>
+                    <h4 id="stat-ram" class="text-2xl font-black">-- MB</h4>
+                </div>
+                <div class="card-stat p-6 rounded-[2rem] border border-white/5">
+                    <p class="text-gray-500 text-xs font-bold uppercase tracking-widest mb-1">WebSocket Latency</p>
+                    <h4 id="stat-ping" class="text-2xl font-black text-blue-500">-- ms</h4>
+                </div>
+                <div class="card-stat p-6 rounded-[2rem] border border-white/5">
+                    <p class="text-gray-500 text-xs font-bold uppercase tracking-widest mb-1">Active Nodes</p>
+                    <h4 id="stat-nodes" class="text-2xl font-black">-- / 1</h4>
+                </div>
+                <div class="card-stat p-6 rounded-[2rem] border border-white/5">
+                    <p class="text-gray-500 text-xs font-bold uppercase tracking-widest mb-1">Global Users</p>
+                    <h4 id="stat-users" class="text-2xl font-black">--</h4>
+                </div>
+            </div>
+
+            <!-- Analytics Chart -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 glass rounded-[2.5rem] p-8">
+                    <h3 class="text-xl font-bold mb-6">Memory Load History</h3>
+                    <canvas id="ramChart" height="120"></canvas>
+                </div>
+                <div class="glass rounded-[2.5rem] p-8">
+                    <h3 class="text-xl font-bold mb-6 text-cyan-400">Node Status</h3>
+                    <div id="nodes-list" class="space-y-4">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab: Guilds -->
+        <section id="tab-guilds" class="hidden animate-in slide-in-from-bottom duration-500">
+            <header class="mb-10">
+                <h2 class="text-4xl font-extrabold tracking-tight">My <span class="text-blue-500">Guilds</span></h2>
+                <p class="text-gray-500 font-medium">Servers where you have administrative access.</p>
+            </header>
+            <div id="guilds-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Data Guilds -->
+            </div>
+        </section>
+
+        <!-- Tab: Moderation -->
+        <section id="tab-moderation" class="hidden animate-in fade-in duration-500">
+            <header class="mb-10">
+                <h2 class="text-4xl font-extrabold tracking-tight">Security <span class="text-blue-500">Shield</span></h2>
+                <p class="text-gray-500 font-medium">Configure Auto-Moderation and Server Protection.</p>
+            </header>
+            <div class="max-w-3xl space-y-4">
+                <div class="glass p-6 rounded-3xl flex items-center justify-between">
+                    <div>
+                        <h4 class="font-bold">Anti-Link System</h4>
+                        <p class="text-xs text-gray-500">Otomatis hapus pesan yang mengandung link mencurigakan.</p>
+                    </div>
+                    <input type="checkbox" class="w-12 h-6 bg-gray-700 rounded-full appearance-none checked:bg-blue-600 transition cursor-pointer relative after:content-[''] after:absolute after:w-4 after:h-4 after:bg-white after:rounded-full after:top-1 after:left-1 checked:after:left-7 after:transition-all">
+                </div>
+                <div class="glass p-6 rounded-3xl flex items-center justify-between">
+                    <div>
+                        <h4 class="font-bold">Anti-Spam Filter</h4>
+                        <p class="text-xs text-gray-500">Batasi member yang mengirim pesan terlalu cepat.</p>
+                    </div>
+                    <input type="checkbox" checked class="w-12 h-6 bg-gray-700 rounded-full appearance-none checked:bg-blue-600 transition cursor-pointer relative after:content-[''] after:absolute after:w-4 after:h-4 after:bg-white after:rounded-full after:top-1 after:left-1 checked:after:left-7 after:transition-all">
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab: AI -->
+        <section id="tab-ai" class="hidden animate-in fade-in duration-500">
+            <header class="mb-10">
+                <h2 class="text-4xl font-extrabold tracking-tight">AI <span class="text-cyan-400">Settings</span></h2>
+                <p class="text-gray-500 font-medium">Manage how the AI interacts with your members.</p>
+            </header>
+            <div class="glass p-8 rounded-[2.5rem] max-w-2xl">
+                <label class="block text-sm font-bold mb-4 uppercase tracking-widest text-gray-500">Custom System Prompt</label>
+                <textarea class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-sm focus:outline-none focus:border-blue-500 transition mb-6" rows="4">Kamu adalah asisten server yang ramah...</textarea>
+                <button class="px-8 py-3 bg-blue-600 rounded-xl font-bold text-sm hover:bg-blue-500 transition">Save AI Configuration</button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        let ramChart;
+        // FUNGSI SWITCH TAB
+        function switchTab(tabName) {
+            document.querySelectorAll('section').forEach(section => section.classList.add('hidden'));
+            document.querySelectorAll('.nav-link').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('tab-' + tabName).classList.remove('hidden');
+            document.getElementById('btn-' + tabName).classList.add('active');
+        }
+
+        // Global Telemetry Loop
+        async function updateStats() {
+            try {
+                const [statsRes, botRes, pingRes, nodeRes, usersRes] = await Promise.all([
+                    fetch('/api/sys/stats'),
+                    fetch('/api/sys/bot'),
+                    fetch('/api/sys/ping'),
+                    fetch('/api/sys/nodes'),
+                    fetch('/api/sys/users')
+                ]);
+
+                const stats = await statsRes.json();
+                const bot = await botRes.json();
+                const ping = await pingRes.json();
+                const nodes = await nodeRes.json();
+                const users = await usersRes.json();
+
+                document.getElementById('stat-ram').innerText = `${stats.ram} MB`;
+                document.getElementById('stat-ping').innerText = `${ping.ping} ms`;
+                document.getElementById('stat-nodes').innerText = `${nodes.length} / 1`;
+                document.getElementById('stat-users').innerText = users.total;
+
+                // Update Chart
+                if (ramChart) {
+                    ramChart.data.labels.push(new Date().toLocaleTimeString());
+                    ramChart.data.datasets[0].data.push(stats.ram);
+                    if (ramChart.data.labels.length > 20) {
+                        ramChart.data.labels.shift();
+                        ramChart.data.datasets[0].data.shift();
+                    }
+                    ramChart.update('none');
+                }
+
+                // Update Nodes UI
+                document.getElementById('nodes-list').innerHTML = nodes.map(n => `
+                    <div class="flex justify-between items-center p-4 bg-white/5 rounded-2xl">
+                        <div>
+                            <p class="text-sm font-bold">${n.name}</p>
+                            <p class="text-[10px] text-gray-500 font-bold uppercase">${n.state}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xs font-bold text-cyan-400">${n.latency}ms</p>
+                            <p class="text-[10px] text-gray-500 font-bold">${n.players} PLAYING</p>
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch (e) { console.error('Stats Update Failed', e); }
+        }
+
+        // Init Chart
+        function initCharts() {
+            const ctx = document.getElementById('ramChart').getContext('2d');
+            ramChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Memory Usage',
+                        data: [],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 3,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#4b5563' } },
+                        x: { display: false }
+                    }
+                }
+            });
+        }
+
+        async function loadDashboard() {
+            try {
+                const res = await fetch('/api/user');
+                const data = await res.json();
+                renderData(data);
+            } catch (e) { /* Error handling */ }
+        }
+
+        function renderData(data) {
+            document.getElementById('user-profile').innerHTML = `
+                <div class="flex items-center gap-4">
+                    <img src="${data.avatar}" class="w-10 h-10 rounded-xl ring-2 ring-blue-500">
+                    <div class="overflow-hidden">
+                        <p class="font-bold truncate text-sm text-white">${data.username}</p>
+                        <span class="text-[9px] px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded-full font-bold uppercase tracking-widest">Enterprise Member</span>
+                    </div>
+                </div>
+            `;
+
+            const grid = document.getElementById('guilds-grid');
+            grid.innerHTML = data.guilds.map(guild => `
+                <div class="glass p-6 rounded-[2rem] border border-white/5 hover:border-blue-500/30 transition duration-300">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-14 h-14 bg-blue-600/10 rounded-2xl flex items-center justify-center text-xl font-black text-blue-500 border border-blue-500/20">
+                            ${guild.name[0]}
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg text-white leading-none mb-1">${guild.name}</h3>
+                            <p class="text-[10px] text-gray-500 font-bold tracking-widest uppercase">ID: ${guild.id.slice(0, 10)}...</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 mb-6">
+                        <div class="p-3 bg-white/5 rounded-xl text-center">
+                            <p class="text-[9px] font-bold text-gray-600 uppercase">Members</p>
+                            <p class="text-sm font-bold">1.2K</p>
+                        </div>
+                        <div class="p-3 bg-white/5 rounded-xl text-center">
+                            <p class="text-[9px] font-bold text-gray-600 uppercase">Region</p>
+                            <p class="text-sm font-bold">ID</p>
+                        </div>
+                    </div>
+                    <button class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold text-sm transition shadow-lg shadow-blue-600/20">
+                        Open Console
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        initCharts();
+        loadDashboard();
+        setInterval(updateStats, 2000);
+    </script>
+</body>
+</html>

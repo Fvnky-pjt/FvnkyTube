@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary: #5865f2;
+            --primary-glow: rgba(88, 101, 242, 0.3);
+            --accent: #00eeff;
+            --bg-dark: #0f1012;
+            --bg-card: #1e1f22;
+            --bg-footer: #18191c;
+            --text-main: #dbdee1;
+            --text-muted: #949ba4;
+            --border: #313338;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 460px;
+            width: 90%;
+            background: var(--bg-card);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            border: 1px solid var(--border);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #5865f2 0%, #4752c4 100%);
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .content {
+            padding: 40px 35px;
+            text-align: center;
+        }
+
+        .content h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+
+        .content p {
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--text-main);
+            margin-bottom: 30px;
+        }
+
+        .code-container {
+            position: relative;
+            display: inline-block;
+            padding: 3px;
+            border-radius: 12px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            margin-bottom: 30px;
+            transition: transform 0.2s ease;
+        }
+
+        .code-container:hover {
+            transform: scale(1.02);
+        }
+
+        .code-box {
+            background-color: #2b2d31;
+            padding: 20px 40px;
+            border-radius: 10px;
+        }
+
+        .code {
+            font-size: 48px;
+            font-weight: 800;
+            letter-spacing: 10px;
+            color: var(--accent);
+            font-family: 'Consolas', 'Courier New', monospace;
+            text-shadow: 0 0 15px rgba(0, 238, 255, 0.4);
+        }
+
+        .warning-text {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-style: italic;
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+        }
+
+        .footer {
+            background-color: var(--bg-footer);
+            padding: 25px;
+            text-align: center;
+            font-size: 11px;
+            color: #72767d;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer b {
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>FVNKY SECURITY</h1>
+        </div>
+        <div class="content">
+            <h2>Verify Your Account</h2>
+            <p>Halo <strong>{{USER_NAME}}</strong>,<br>Gunakan kode verifikasi unik ini untuk mengakses server <strong>{{SERVER_NAME}}</strong>.</p>
+            
+            <div class="code-container">
+                <div class="code-box">
+                    <div class="code">{{CODE}}</div>
+                </div>
+            </div>
+
+            <p class="warning-text">
+                Kode ini berlaku selama 10 menit. <br> 
+                <b>Jangan berikan kode ini kepada siapapun</b>, termasuk staf kami.
+            </p>
+        </div>
+        <div class="footer">
+            &copy; 2026 <b>Fvnky Studio Team</b> • Protected by FvnkyTube Neural Engine
+        </div>
+    </div>
+</body>
+</html>

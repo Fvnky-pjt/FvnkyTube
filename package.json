@@ -1,0 +1,39 @@
+{
+  "name": "fvnky-discord-bot",
+  "version": "1.0.0",
+  "description": "Discord Music Bot System",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "postinstall": "node -e \"console.log('postinstall ok')\"",
+    "server": "node server/index.js",
+    "client": "npm run dev --prefix client",
+    "web": "concurrently \"npm run server\" \"npm run client\"",
+    "bot": "node Fvnky-bot/index.js",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "start": "node server/index.js"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2",
+    "@discordjs/voice": "^0.17.0",
+    "@google/generative-ai": "^0.21.0",
+    "axios": "^1.16.0",
+    "chalk": "^5.6.2",
+    "cors": "^2.8.6",
+    "discord.js": "^14.15.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.22.1",
+    "express-session": "^1.19.0",
+    "ffmpeg-static": "^5.2.0",
+    "helmet": "^8.1.0",
+    "libsodium-wrappers": "^0.7.13",
+    "nodemailer": "^8.0.7",
+    "openai": "^6.37.0",
+    "passport": "^0.7.0",
+    "passport-discord": "^0.1.4",
+    "play-dl": "^1.9.7",
+    "pptxgenjs": "^4.0.1",
+    "shoukaku": "^4.0.0",
+    "zod": "^4.4.3"
+  }
+}

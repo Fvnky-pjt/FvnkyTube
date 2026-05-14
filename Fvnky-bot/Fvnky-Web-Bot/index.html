@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fvnky Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0f1012; color: #e3e5e8; font-family: 'Inter', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .card { background-color: #1e1f22; border: 1px solid #2f3136; border-radius: 12px; padding: 40px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .btn-blurple { background-color: #5865f2; color: white; padding: 12px 24px; border-radius: 8px; font-weight: bold; transition: background 0.2s; }
+        .btn-blurple:hover { background-color: #4752c4; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="flex items-center justify-center gap-3 mb-6">
+            <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-2xl">F</div>
+            <h1 class="text-3xl font-extrabold tracking-tight">FVNKY<span class="text-blue-500">BOT</span></h1>
+        </div>
+        <p class="text-gray-400 mb-8">Login to manage your FvnkyBot settings.</p>
+        <a href="/login" class="btn-blurple">Login with Discord</a>
+    </div>
+</body>
+</html>
